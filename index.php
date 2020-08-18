@@ -48,10 +48,7 @@ $app->post('/', function ($request, $response)
 		$userMessage = $event['message']['text'];
 		if(strtolower($userMessage) == 'halo')
 		{
-			$message = "@Albert Wijaya";
-
-			$response = $bot->getRoomMemberProfile(<roomId>, <userId>);
-
+			$message = $userMessage;
             $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($response);
 			$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
 			return $result->getHTTPStatus() . ' ' . $result->getRawBody();
