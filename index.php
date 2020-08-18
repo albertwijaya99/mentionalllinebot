@@ -50,8 +50,6 @@ $app->post('/', function ($request, $response)
 		{
 			$message = "@Albert Wijaya";
 
-			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('<channel access token>');
-			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => '<channel secret>']);
 			$response = $bot->getRoomMemberProfile(<roomId>, <userId>);
 
             $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($response);
