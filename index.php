@@ -49,7 +49,12 @@ $app->post('/', function ($request, $response)
 		if(strtolower($userMessage) == 'halo')
 		{
 			$message = "@Albert Wijaya";
-            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+
+			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('<channel access token>');
+			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => '<channel secret>']);
+			$response = $bot->getRoomMemberProfile(<roomId>, <userId>);
+
+            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($response);
 			$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
 			return $result->getHTTPStatus() . ' ' . $result->getRawBody();
 		
