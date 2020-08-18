@@ -46,13 +46,15 @@ $app->post('/', function ($request, $response)
 	foreach ($data['events'] as $event)
 	{
 		$userMessage = $event['message']['text'];
-		$message = $userMessage;
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-		$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
-		return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+		if(strtolower($userMessage) == 'halo')
+		{
+			$message = $event;
+            $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+			$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+			return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+		
+		}
 	}
-	
-
 });
 
 // $app->get('/push/{to}/{message}', function ($request, $response, $args)
