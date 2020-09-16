@@ -30,7 +30,7 @@ $app->post('/', function ($request, $response) {
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hello wkkw');
-	$response = $bot->pushMessage('<to>', $textMessageBuilder);
+	$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 
