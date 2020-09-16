@@ -28,9 +28,9 @@ $app->post('/', function ($request, $response) {
 		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(print_r($request));
+		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(json_encode($request));
 		$fp = fopen('asd.txt', 'w');
-		fwrite($fp, print_r($request));
+		fwrite($fp, json_encode($request));
 		fclose($fp);
 		$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
