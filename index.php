@@ -21,7 +21,7 @@ $app->get('/', function ($request, $response) {
 });
 
 $app->post('/', function ($request, $response) {
-	$message = ""
+	$message = "";
 
 	if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
 		$mesage = "HTTP header 'X-Hub-Signature' is missing.";
