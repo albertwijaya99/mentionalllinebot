@@ -21,26 +21,14 @@ $app->get('/', function ($request, $response) {
 });
 
 $app->post('/', function ($request, $response) {
-
-	if (!isset($_SERVER['X-Hub-Signature'])) {
 		// init bot
 		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("HTTP header 'X-Hub-Signature' is missing.");
+		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(print_r($request));
 		$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 		echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
-	} else {
-		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("HTTP header 'X-Hub-Signature' is present");
-		$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
-
-		echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
-	}
-		
 });
 
 /* JUST RUN IT */
