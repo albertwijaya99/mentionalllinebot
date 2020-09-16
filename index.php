@@ -23,7 +23,7 @@ $app->get('/', function ($request, $response) {
 $app->post('/', function ($request, $response) {
 
 		$data = json_decode(file_get_contents('php://input'), true);
-		
+		print_r($data);
 		// init bot
 		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
