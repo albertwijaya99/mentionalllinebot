@@ -29,16 +29,6 @@ $app->post('/', function ($request, $response)
 	// log body and signature
 	file_put_contents('php://stderr', 'Body: '.$body);
 
-	// is LINE_SIGNATURE exists in request header?
-	if (empty($signature)){
-		return $response->withStatus(400, 'Signature not set');
-	}
-
-	// is this request comes from LINE?
-	if($_ENV['PASS_SIGNATURE'] == false && ! SignatureValidator::validateSignature($body, $_ENV['CHANNEL_SECRET'], $signature)){
-		return $response->withStatus(400, 'Invalid signature');
-	}
-
 	// init bot
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
@@ -46,7 +36,7 @@ $app->post('/', function ($request, $response)
 	foreach ($data['events'] as $event)
 	{
 		$userMessage = $event['message']['text'];
-		$message = "your user id = ".$event['source']['userId']."\nyour groupid = ".$event['source']['groupId'];
+		$message = "asd";
 		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 		$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
 		return $result->getHTTPStatus() . ' ' . $result->getRawBody();
