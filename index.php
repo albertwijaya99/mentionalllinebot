@@ -20,39 +20,21 @@ $app->get('/', function ($request, $response) {
 	return "sup?";
 });
 
-$app->post('/', function ($request, $response)
-{
+$app->post('/', function ($request, $response) {
 	// get request body and line signature header
 	$body 	   = file_get_contents('php://input');
 	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
-
-	// log body and signature
-	file_put_contents('php://stderr', 'Body: '.$body);
 
 	// init bot
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 	$data = json_decode($body, true);
-	foreach ($data['events'] as $event)
-	{
-		$userMessage = $event['message']['text'];
-		$message = "asd";
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-		$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
-		return $result->getHTTPStatus() . ' ' . $result->getRawBody();
-	}
+	$userMessage = $event['message']['text'];
+	$message = "asd";
+	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+	$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+	return $result->getHTTPStatus() . ' ' . $result->getRawBody();
 });
-
-// $app->get('/push/{to}/{message}', function ($request, $response, $args)
-// {
-// 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-// 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-
-// 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($args['message']);
-// 	$result = $bot->pushMessage($args['to'], $textMessageBuilder);
-
-// 	return $result->getHTTPStatus() . ' ' . $result->getRawBody();
-// });
 
 /* JUST RUN IT */
 $app->run();
