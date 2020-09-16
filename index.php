@@ -17,33 +17,52 @@ $app = new Slim\App($configs);
 
 /* ROUTES */
 $app->get('/', function ($request, $response) {
-	return "hehe";
+	return "sup?";
 });
 
-$app->post('/', function ($request, $response) {
+$app->post('/', function ($request, $response)
+{
+	// get request body and line signature header
+	$body 	   = file_get_contents('php://input');
+	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
 
-		try{
-			$data = json_decode(file_get_contents('php://input'), true);
-			// init bot
-			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-			$m = strval($data['sender']['login']) . " has done something on " . $data['repository']['name'] . ". Check now on https://github.com/". $data['repository']['full_name'];
+	// log body and signature
+	file_put_contents('php://stderr', 'Body: '.$body);
 
-			$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($m);
-			$response = $bot->pushMessage('C1408b40e33d43145a513dd7141365234', $textMessageBuilder);
+	// is LINE_SIGNATURE exists in request header?
+	if (empty($signature)){
+		return $response->withStatus(400, 'Signature not set');
+	}
 
-			echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
-		} catch (Exception $e) {
-			// init bot
-			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+	// is this request comes from LINE?
+	if($_ENV['PASS_SIGNATURE'] == false && ! SignatureValidator::validateSignature($body, $_ENV['CHANNEL_SECRET'], $signature)){
+		return $response->withStatus(400, 'Invalid signature');
+	}
 
-			$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("error");
-			$response = $bot->pushMessage('C1408b40e33d43145a513dd7141365234', $textMessageBuilder);
-
-			echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
-		}
+	// init bot
+	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+	$data = json_decode($body, true);
+	foreach ($data['events'] as $event)
+	{
+		$userMessage = $event['message']['text'];
+		$message = "your user id = ".$event['source']['userId']."\nyour groupid = ".$event['source']['groupId'];
+		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+		$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+		return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+	}
 });
+
+// $app->get('/push/{to}/{message}', function ($request, $response, $args)
+// {
+// 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+// 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+
+// 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($args['message']);
+// 	$result = $bot->pushMessage($args['to'], $textMessageBuilder);
+
+// 	return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+// });
 
 /* JUST RUN IT */
 $app->run();
