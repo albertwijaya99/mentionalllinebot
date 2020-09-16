@@ -6,8 +6,19 @@ require __DIR__ . '/vendor/autoload.php';
 use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 
 // load config
+$message= "";
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
+if ($_POST && $_POST['payload']){
+    $payload = json_decode($_POST['payload'], true);
+    if (isset($payload['ref']) && $payload['ref'] == 'refs/heads/master'){
+        $messsage = "a";
+	} else {
+		$message = "b";
+	}
+} else {
+	$message = "c";
+}
 
 // initiate app
 $configs =  [
@@ -46,7 +57,6 @@ $app->post('/', function ($request, $response)
 	foreach ($data['events'] as $event)
 	{
 		$userMessage = $event['message']['text'];
-		$message = "your user id = ".$event['source']['userId']."\nyour groupid = ".$event['source']['groupId'];
 		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 		$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
 		return $result->getHTTPStatus() . ' ' . $result->getRawBody();
