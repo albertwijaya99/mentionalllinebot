@@ -32,7 +32,7 @@ $app->post('/', function ($request, $response) {
                 $m = strval($data['sender']['login']) . " has done something on " . $data['repository']['name'] . ". Check now on https://github.com/". $data['repository']['full_name'];
     
                 $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($m);
-                $response = $bot->pushMessage('C1408b40e33d43145a513dd7141365234', $textMessageBuilder);
+                $response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
     
                 echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
             } catch (Exception $e) {
@@ -41,7 +41,7 @@ $app->post('/', function ($request, $response) {
                 $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
     
                 $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("error");
-                $response = $bot->pushMessage('C1408b40e33d43145a513dd7141365234', $textMessageBuilder);
+                $response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
     
                 echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
             }
