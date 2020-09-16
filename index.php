@@ -22,13 +22,17 @@ $app->get('/', function ($request, $response) {
 
 $app->post('/', function ($request, $response) {
 
-		$data = json_decode(file_get_contents('php://input'), true);
-		print_r($data);
+		$datas = json_decode(file_get_contents('php://input'), true);
 		// init bot
 		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+		$m = "";
 
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(implode($data));
+		foreach($datas as $data){
+			$m += implode($data)
+		}
+
+		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(implode($m));
 		$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 		echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
