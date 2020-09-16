@@ -33,7 +33,7 @@ $app->post('/', function ($request, $response) {
 	$message = "asd";
 	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 	$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
-	return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+	return $result->getHTTPStatus() . ' awowkaoakw ' . $result->getRawBody();
 });
 
 /* JUST RUN IT */
