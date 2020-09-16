@@ -22,18 +22,13 @@ $app->get('/', function ($request, $response) {
 
 $app->post('/', function ($request, $response) {
 	// get request body and line signature header
-	$body 	   = file_get_contents('php://input');
-	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
+	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient('<channel access token>');
+	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => '<channel secret>']);
 
-	// init bot
-	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
-	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-	$data = json_decode($body, true);
-	$userMessage = $event['message']['text'];
-	$message = "asd";
-	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-	$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
-	return $result->getHTTPStatus() . ' awowkaoakw ' . $result->getRawBody();
+	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hello');
+	$response = $bot->replyMessage('<replyToken>', $textMessageBuilder);
+
+	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
 });
 
 /* JUST RUN IT */
