@@ -9,15 +9,46 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 $message= "";
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
+
 if ($_POST && $_POST['payload']){
     $payload = json_decode($_POST['payload'], true);
     if (isset($payload['ref']) && $payload['ref'] == 'refs/heads/master'){
-        $messsage = "a";
+		$messsage = "a";
+		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+		$data = json_decode($body, true);
+		foreach ($data['events'] as $event)
+		{
+			$userMessage = $event['message']['text'];
+			$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+			$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+			return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+		}
 	} else {
 		$message = "b";
+		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+		$data = json_decode($body, true);
+		foreach ($data['events'] as $event)
+		{
+			$userMessage = $event['message']['text'];
+			$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+			$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+			return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+		}
 	}
 } else {
 	$message = "c";
+	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
+	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
+	$data = json_decode($body, true);
+	foreach ($data['events'] as $event)
+	{
+		$userMessage = $event['message']['text'];
+		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+		$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+		return $result->getHTTPStatus() . ' ' . $result->getRawBody();
+	}
 }
 
 // initiate app
