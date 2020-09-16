@@ -28,7 +28,7 @@ $app->post('/', function ($request, $response) {
 		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("hehe");
+		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(gettype($HTTP_RAW_POST_DATA));
 		$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 		echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
