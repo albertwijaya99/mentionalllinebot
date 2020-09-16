@@ -21,14 +21,19 @@ $app->get('/', function ($request, $response) {
 });
 
 $app->post('/', function ($request, $response) {
+	// get request body and line signature header
+	$body 	   = file_get_contents('php://input');
+	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
 
 	// init bot
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-	$message = "asd";
-	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
-	$result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
-	return $result->getHTTPStatus() . '  ' . $result->getRawBody();
+
+	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hello wkkw');
+	$response = $bot->pushMessage('<to>', $textMessageBuilder);
+
+	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+
 });
 
 /* JUST RUN IT */
