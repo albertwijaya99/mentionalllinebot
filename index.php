@@ -27,9 +27,9 @@ $app->post('/', function ($request, $response) {
 			// init bot
 			$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 			$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
-			$m = strval($data['sender']['login']) . " has done somthing on " . $data['repository']['name'] . " check now on https://github.com/". $data['repository']['full_name'];
+			$m = strval($data['sender']['login']) . " has done somthing on " . $data['repository']['name'] . ". check now on https://github.com/". $data['repository']['full_name'];
 
-			$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder();
+			$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($m);
 			$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 			echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
