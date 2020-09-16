@@ -21,11 +21,9 @@ $app->get('/', function ($request, $response) {
 });
 
 $app->post('/', function ($request, $response) {
-	// get request body and line signature header
-	$body 	   = file_get_contents('php://input');
-	$signature = $_SERVER['HTTP_X_LINE_SIGNATURE'];
 
-	// init bot
+	if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])){
+		// init bot
 	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
@@ -33,7 +31,7 @@ $app->post('/', function ($request, $response) {
 	$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
-
+	}
 });
 
 /* JUST RUN IT */
