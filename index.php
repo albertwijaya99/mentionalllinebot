@@ -17,21 +17,18 @@ $app = new Slim\App($configs);
 
 /* ROUTES */
 $app->get('/', function ($request, $response) {
-	$myfile = fopen("log.txt", "r") or die("Unable to open file!");
-	$a =  fgets($myfile);
-	fclose($myfile);
-	return $a;
+	return "hehe";
 });
 
 $app->post('/', function ($request, $response) {
+
+		$data = json_decode(file_get_contents('php://input'), true);
+		
 		// init bot
 		$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($_ENV['CHANNEL_ACCESS_TOKEN']);
 		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
-		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(json_encode($request));
-		$fp = fopen('asd.txt', 'w');
-		fwrite($fp, json_encode($request));
-		fclose($fp);
+		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder("hehe");
 		$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 		echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
