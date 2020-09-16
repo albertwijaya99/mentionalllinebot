@@ -17,7 +17,10 @@ $app = new Slim\App($configs);
 
 /* ROUTES */
 $app->get('/', function ($request, $response) {
-	return "sup?";
+	$myfile = fopen("log.txt", "r") or die("Unable to open file!");
+	$a =  fgets($myfile);
+	fclose($myfile);
+	return $a;
 });
 
 $app->post('/', function ($request, $response) {
@@ -26,6 +29,9 @@ $app->post('/', function ($request, $response) {
 		$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $_ENV['CHANNEL_SECRET']]);
 
 		$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder(print_r($request));
+		$fp = fopen('asd.txt', 'w');
+		fwrite($fp, print_r($request));
+		fclose($fp);
 		$response = $bot->pushMessage('U3b5652591281552702e77740cde3a101', $textMessageBuilder);
 
 		echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
